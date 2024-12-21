@@ -1,31 +1,58 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "./styles";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-interface TodoItemProps {
-  todoText: string;
+export interface TodoItemModel {
+  id: number;
+  text: string;
+  completed: boolean;
 }
 
-const TodoItem = ({ todoText }: TodoItemProps) => {
+interface TodoItemProps {
+  todo: TodoItemModel;
+  onPress: (id: number) => void;
+}
+
+const TodoItem = ({ todo, onPress }: TodoItemProps) => {
+  const { id, text, completed } = todo;
+
+  const handleUpdate = () => {
+    onPress(id);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{todoText}</Text>
-    </View>
+    <TouchableOpacity style={styles.container} onPress={handleUpdate}>
+      <Text style={styles.text}>{text}</Text>
+      <AntDesign
+        name={completed ? "checksquare" : "checksquareo"}
+        size={24}
+        color="white"
+      />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
+
     backgroundColor: theme.placeholderTextColor,
     width: "100%",
-    height: 50,
+    height: "auto",
     marginBottom: 8,
     borderRadius: 8,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    // paddingLeft: 20,
+    // paddingRight: 20,
     alignItems: "center",
   },
   text: {
     color: "#fff",
     fontSize: 16,
+    maxWidth: "90%",
+    height: "auto",
   },
 });
 

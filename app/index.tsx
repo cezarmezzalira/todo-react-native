@@ -1,16 +1,32 @@
 import Title from "@/components/Title";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { globalStyles, theme } from "@/components/styles";
 import SuperButton from "@/components/SuperButton";
-import TodoItem from "@/components/TodoItem";
+import TodoItem, { TodoItemModel } from "@/components/TodoItem";
 import { useState } from "react";
 
 export default function Index() {
   const [newItem, setNewItem] = useState("");
-  const [todos, setTodos] = useState<Array<string>>([]);
+  const [todos, setTodos] = useState<Array<TodoItemModel>>([]);
 
   const addTodo = () => {
-    setTodos([...todos, newItem]);
+    if (!newItem || newItem.trim() === "") {
+      alert("Informe um texto válido");
+      return;
+    }
+
+    setTodos((todos) => [
+      ...todos,
+      { id: Date.now(), text: newItem, completed: false },
+    ]);
+  };
+
+  const updateTodo = (id: number) => {
+    setTodos((todos) =>
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   return (
@@ -25,12 +41,12 @@ export default function Index() {
           placeholder="Digite a tarefa"
         />
         <SuperButton
-          iconLeft={"plussquare"}
+          iconRight={"plussquare"}
           title="Adicionar"
           onPress={addTodo}
         />
-        {todos.map((todo, index) => (
-          <TodoItem key={index} todoText={todo} />
+        {todos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} onPress={updateTodo} />
         ))}
       </View>
     </ScrollView>
