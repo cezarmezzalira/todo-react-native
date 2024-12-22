@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "./styles";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
@@ -10,18 +10,33 @@ export interface TodoItemModel {
 
 interface TodoItemProps {
   todo: TodoItemModel;
-  onPress: (id: number) => void;
+  updateTodo: (id: number) => void;
+  deleteTodo: (id: number) => void;
 }
 
-const TodoItem = ({ todo, onPress }: TodoItemProps) => {
+const TodoItem = ({ todo, updateTodo, deleteTodo }: TodoItemProps) => {
   const { id, text, completed } = todo;
 
   const handleUpdate = () => {
-    onPress(id);
+    updateTodo(id);
+  };
+
+  const handleDelete = () => {
+    Alert.alert("Excluir tarefa", "Deseja realmente excluir essa tarefa?", [
+      { text: "Não" },
+      {
+        text: "Sim",
+        onPress: () => deleteTodo(id),
+      },
+    ]);
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handleUpdate}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handleUpdate}
+      onLongPress={handleDelete}
+    >
       <Text style={styles.text}>{text}</Text>
       <AntDesign
         name={completed ? "checksquare" : "checksquareo"}
@@ -44,8 +59,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 10,
     paddingVertical: 10,
-    // paddingLeft: 20,
-    // paddingRight: 20,
     alignItems: "center",
   },
   text: {

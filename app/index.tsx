@@ -29,6 +29,9 @@ export default function Index() {
     );
   };
 
+  const deleteTodo = (id: number) => {
+    setTodos((todos) => todos.filter((todo) => todo.id !== id));
+  };
   return (
     <ScrollView style={globalStyles.container}>
       <View style={styles.container}>
@@ -46,7 +49,12 @@ export default function Index() {
           onPress={addTodo}
         />
         {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onPress={updateTodo} />
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            updateTodo={updateTodo}
+            deleteTodo={deleteTodo}
+          />
         ))}
       </View>
     </ScrollView>
